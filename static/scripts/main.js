@@ -1,21 +1,17 @@
 /*global document */
 (function() {
+
+	// označení aktivní položky v levém menu podle URL
+
 	var temp = location.href.split("/"),
 		currentPage = temp[temp.length - 1];
 
-	var currentLink = document.body.querySelector("#nav a[href='" + currentPage + "']");
-	if(currentLink) {
-		currentLink.className += "current";
+	var currentLink = $("#nav a[href='" + currentPage + "']");
+	if(currentLink.length) {
+		currentLink.addClass("current");
 	}
 
-	$("table").on("click", "tr", function(event) {
-		var tr = $(this);
-		if($(event.target).closest(".more").length) {
-			event.preventDefault();
-		} else {
-			tr.find(".more").slideToggle();
-		}
-	});
+	// ukládání pozice posuvníku levého menu
 
 	if(window.localStorage) {
 		$("#nav").scroll(function(event) {
@@ -25,15 +21,26 @@
 		$("#nav").prop("scrollTop", window.localStorage.getItem("navScrollTop"));
 	}
 
+
+	// filtrování metod
+
 	var methods = $(".methods");
 	var filterInputs = methods.find(".filter input");
 
-	// find counts and disable filter option if 0
-	filterInputs.filter("[data-attribute][data-value]").each(function() {
+	methods.find(".more").each(function(index, moreElement) {
+		var element = $(moreElement);
+		element.hide();
+		var td = element.closest("td");
+		td.wrapInner('<div style="position:relative">').find("div:first-child").prepend('<span class="arrow">');
+
+	});
+
+	// přidání odpovídajících metod k položkám filtru
+	// v případě nenalezení zdeaktivuje možnost volby položky filtru
+
+	filterInputs.filter("[data-class]").each(function() {
 		var input = $(this),
-			attribute = input.data("attribute"),
-			value = input.data("value"),
-			count = methods.find(".method[data-" + attribute + "=" + value + "]").length,
+			count = methods.find(".method." + input.data("class")).length,
 			label = input.closest("label");
 
 		label.append(" <small>(" + count + ")</small>");
@@ -43,34 +50,37 @@
 			input.prop("checked", false);
 			label.addClass("disabled");
 		}
-
 	});
 
 	filterInputs.change(function() {
+		methods.toggleClass("hide-" + $(this).data("class"));
+	});
 
-		var filter = {};
 
-		methods.find(".filter input[data-attribute]").each(function() {
-			var input = $(this);
-			var item = filter[input.data("attribute")];
-			if(!item) {
-				item = filter[input.data("attribute")] = [];
+	// otevření detailu metody
+
+	$("table").on("click", "tr", function(event) {
+		var tr = $(this),
+			target = $(event.target);
+		if(target.closest(".more").length) {
+			if(!target.is("a")) {
+				event.preventDefault();
 			}
-			if(input.prop("checked")) {
-			   item.push(input.data("value"));
-		   }
-		});
+		} else {
+			tr.find(".more").slideToggle(function() {
 
-		methods.find(".method").each(function() {
-			var method = $(this);
-			$.each(method.data(), function(name, value) {
-				if((filter[name] && $.inArray(value, filter[name]) !== -1) || (filter[name] && !value)) {
-					method.show();
+				var element = $(this),
+					td = element.closest("td"),
+					classOpen = "open";
+
+				if(element.is(":visible")) {
+					td.addClass(classOpen);
 				} else {
-					method.hide();
+					td.removeClass(classOpen);
 				}
 			});
-		});
+		}
 	});
+
 
 })();

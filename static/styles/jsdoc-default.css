@@ -249,9 +249,8 @@ a:active {
 {
     font-family: monospace;
     font-size: 100%;
-    line-height: 18px;
     display: block;
-    padding: 4px 12px;
+    padding: 0 12px;
     margin: 0;
     background-color: #fff;
     color: #000;
@@ -278,13 +277,20 @@ a:active {
 
 .prettyprint.linenums li
 {
-	border-left: 3px #ddd solid;
+	border-left: 1px #ddd solid;
+	height: 24px;
+	line-height: 24px;
 }
 
 .prettyprint.linenums li.selected,
 .prettyprint.linenums li.selected *
 {
 	background-color: lightyellow;
+}
+
+.prettyprint.linenums li:hover,
+.prettyprint.linenums li:hover code {
+	background: lightyellow;
 }
 
 .prettyprint.linenums li *
@@ -409,17 +415,64 @@ a:active {
 	border: 0;
 }
 
+.method td:first-child {
+	padding-right: 25px;
+}
+
 .member table,
 .method table {
 	margin: 0;
 }
 
 
+/*
 .member .more,
 .method .more {
 	display: none;
 }
+*/
 
+
+.methods.hide-inherited .method.inherited {
+	display: none;
+}
+
+.methods.hide-access-public .method.access-public {
+	display: none;
+}
+
+.methods.hide-access-protected .method.access-protected {
+	display: none;
+}
+
+.methods.hide-access-private .method.access-private {
+	display: none;
+}
+
+
+td .arrow {
+	width: 5px;
+	height: 9px;
+	background: url(../images/arrow-right.png) no-repeat;
+	position: absolute;
+	left: -20px;
+	top: 7px;
+	opacity: 0.3;
+
+	-webkit-transition: .4s;
+	-moz-transition: .4s;
+	transition: .4s;
+}
+
+tr:hover .arrow {
+	opacity: 0.7;
+}
+
+.open .arrow {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
 
 
 

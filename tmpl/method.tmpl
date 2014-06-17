@@ -2,7 +2,10 @@
 var data = obj;
 var self = this;
 ?>
-<div class="method" data-inherited="<?js= data.inherited ?>" data-access="<?js if(data.access) { ?><?js= data.access ?><?js } else { ?>public<?js } ?>">
+
+
+
+<div class="method<?js if(data.inherited) { ?> inherited<?js } ?> access-<?js if(data.access) { ?><?js= data.access ?><?js } else { ?>public<?js } ?>">
 
 	<table width="100%">
 		<?js if (kind === 'class') { ?>
